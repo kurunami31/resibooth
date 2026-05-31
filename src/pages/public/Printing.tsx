@@ -65,15 +65,28 @@ export default function Printing() {
           : ''
 
       const html = `
-        <div style="max-width:400px;margin:0 auto;font-family:monospace;background:#f4f1ed;padding:16px;border-radius:8px">
-          <div style="text-align:center;font-size:14px;color:#555;margin-bottom:12px;letter-spacing:2px">
-            - - - RESIBOOTH - - -
+        <div style="max-width:480px;margin:0 auto;font-family:system-ui,-apple-system,sans-serif;background:#f4f1ed;padding:24px">
+          <div style="text-align:center;font-size:13px;color:#d45a35;letter-spacing:4px;font-weight:700;margin-bottom:4px;text-transform:uppercase">RESIBOOTH</div>
+          <div style="text-align:center;font-size:10px;color:#bbb;letter-spacing:2px;margin-bottom:20px;text-transform:uppercase">Photo Studio</div>
+
+          <div style="background:#fff;border-radius:8px;padding:20px;box-shadow:0 1px 3px rgba(0,0,0,.08)">
+            <div style="font-size:18px;font-weight:800;color:#1c1917;margin-bottom:4px">Your photos are ready!</div>
+            <div style="font-size:12px;color:#999;margin-bottom:16px">Thank you for visiting ResiBOOTH</div>
+
+            ${imgTag ? `<div style="margin-bottom:16px;border:1px solid #eee;border-radius:6px;overflow:hidden">${imgTag}</div>` : ''}
+
+            <div style="border-top:1px dashed #ddd;padding-top:12px">
+              <table style="width:100%;font-size:12px;color:#666">
+                <tr><td style="padding:3px 0;color:#999">Session</td><td style="padding:3px 0;text-align:right;font-weight:600;color:#1c1917;font-family:monospace">#${c.sid}</td></tr>
+                <tr><td style="padding:3px 0;color:#999">Package</td><td style="padding:3px 0;text-align:right;font-weight:600;color:#1c1917">${c.pkgName}</td></tr>
+                <tr><td style="padding:3px 0;color:#999">Copies</td><td style="padding:3px 0;text-align:right;font-weight:600;color:#1c1917">${c.copies}</td></tr>
+              </table>
+            </div>
           </div>
-          ${imgTag ? `<div style="margin-bottom:8px;border:1px solid #ddd;border-radius:4px;overflow:hidden">${imgTag}</div>` : ''}
-          <div style="margin-top:12px;padding-top:8px;border-top:1px dashed #ccc;font-size:11px;color:#888;text-align:center">
-            Session: ${c.sid}<br/>
-            Package: ${c.pkgName}<br/>
-            ${c.copies} cop${c.copies > 1 ? 'ies' : 'y'}
+
+          <div style="text-align:center;font-size:10px;color:#bbb;margin-top:16px;line-height:1.6">
+            <div style="margin-bottom:4px">- - - - - - - - - - - - - - -</div>
+            <div>Visit us again at ResiBOOTH</div>
           </div>
         </div>`
 
