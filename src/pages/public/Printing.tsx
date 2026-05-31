@@ -59,38 +59,26 @@ export default function Printing() {
         }
       } catch {}
 
-      const html = `
-        <div style="max-width:480px;margin:0 auto;font-family:system-ui,-apple-system,sans-serif;background:#f4f1ed;padding:24px">
-          <div style="text-align:center;font-size:13px;color:#d45a35;letter-spacing:4px;font-weight:700;margin-bottom:4px;text-transform:uppercase">RESIBOOTH</div>
-          <div style="text-align:center;font-size:10px;color:#bbb;letter-spacing:2px;margin-bottom:20px;text-transform:uppercase">Photo Studio</div>
+      const photoBlock = photoUrl
+        ? '<div style="padding:8px 0;border-bottom:1px dashed #ddd;text-align:center"><img src="' + photoUrl + '" style="max-width:100%;height:auto" /></div>'
+        : ''
 
-          <div style="background:#fff;border-radius:8px;padding:24px;box-shadow:0 1px 3px rgba(0,0,0,.08)">
-            <p style="font-size:14px;color:#1c1917;line-height:1.7;margin:0 0 16px 0">
-              Hi there,
-            </p>
-            <p style="font-size:14px;color:#1c1917;line-height:1.7;margin:0 0 16px 0">
-              Thank you for stopping by <strong>ResiBOOTH</strong>! We had a great time capturing your moments. Your photos are attached below — feel free to download and share them with family and friends.
-            </p>
-            <p style="font-size:14px;color:#1c1917;line-height:1.7;margin:0 0 16px 0">
-              Come visit us again anytime for more fun and memories. See you at the booth!
-            </p>
-
-            ${photoUrl ? `<div style="margin-bottom:16px;border:1px solid #eee;border-radius:6px;overflow:hidden"><img src="${photoUrl}" style="width:100%;display:block" /></div>` : '<div style="margin-bottom:16px;padding:12px;background:#f9f9f9;border-radius:6px;text-align:center;font-size:12px;color:#999">Your photo strip was too large to embed. Open the booth to view.</div>'}
-
-            <div style="border-top:1px dashed #ddd;padding-top:12px">
-              <table style="width:100%;font-size:12px;color:#666">
-                <tr><td style="padding:3px 0;color:#999">Session</td><td style="padding:3px 0;text-align:right;font-weight:600;color:#1c1917;font-family:monospace">#${c.sid}</td></tr>
-                <tr><td style="padding:3px 0;color:#999">Package</td><td style="padding:3px 0;text-align:right;font-weight:600;color:#1c1917">${c.pkgName}</td></tr>
-                <tr><td style="padding:3px 0;color:#999">Copies</td><td style="padding:3px 0;text-align:right;font-weight:600;color:#1c1917">${c.copies}</td></tr>
-              </table>
-            </div>
-          </div>
-
-          <div style="text-align:center;font-size:10px;color:#bbb;margin-top:16px;line-height:1.6">
-            <div style="margin-bottom:4px">- - - - - - - - - - - - - - -</div>
-            <div>ResiBOOTH &middot; Self-Service Photo Studio</div>
-          </div>
-        </div>`
+      const html = '<div style="font-family:sans-serif;max-width:480px;margin:0 auto;background:#f4f1ed;padding:20px">'
+        + '<div style="text-align:center;font-size:12px;color:#d45a35;font-weight:700;letter-spacing:3px">RESIBOOTH</div>'
+        + '<div style="text-align:center;font-size:10px;color:#aaa;letter-spacing:2px;margin-bottom:16px">Photo Studio</div>'
+        + '<div style="background:#fff;padding:20px;border-radius:6px">'
+        + '<p style="font-size:14px;margin:0 0 12px 0;color:#333">Hi there,</p>'
+        + '<p style="font-size:14px;margin:0 0 12px 0;color:#333">Thank you for stopping by ResiBOOTH! We had a great time capturing your moments. Your photos are below.</p>'
+        + '<p style="font-size:14px;margin:0 0 12px 0;color:#333">Come visit us again anytime for more fun and memories. See you at the booth!</p>'
+        + photoBlock
+        + '<div style="padding-top:12px;font-size:12px;color:#888">'
+        + '<div>Session: #' + c.sid + '</div>'
+        + '<div>Package: ' + c.pkgName + '</div>'
+        + '<div>Copies: ' + c.copies + '</div>'
+        + '</div>'
+        + '</div>'
+        + '<div style="text-align:center;font-size:10px;color:#bbb;margin-top:16px">ResiBOOTH &middot; Self-Service Photo Studio</div>'
+        + '</div>'
 
       await emailjs.send(EMAIL_CONFIG.serviceId, EMAIL_CONFIG.templateId, {
         to_email: c.email,
@@ -100,7 +88,7 @@ export default function Printing() {
         session_id: c.sid,
         package_name: c.pkgName,
       }, EMAIL_CONFIG.publicKey)
-    } catch (e) { console.error('Email send failed:', e); alert('Email send failed. Check console.') }
+    } catch (e) { console.error('Email send failed:', e); alert('Email failed: ' + (e instanceof Error ? e.message : 'Unknown')) }
     setEmailSent(true)
   }
 
