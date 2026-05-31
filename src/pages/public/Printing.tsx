@@ -48,7 +48,6 @@ export default function Printing() {
     try {
       const { default: emailjs } = await import('@emailjs/browser')
 
-      // Try to upload to ImgBB, fall back to embedding data URL
       let photoUrl = ''
       try {
         if (c.layoutImg) {
@@ -59,12 +58,6 @@ export default function Printing() {
           if (json.success) photoUrl = json.data.url
         }
       } catch {}
-
-      const imgTag = photoUrl
-        ? `<img src="${photoUrl}" style="width:100%;display:block" />`
-        : c.layoutImg
-          ? `<img src="${c.layoutImg}" style="width:100%;display:block" />`
-          : ''
 
       const html = `
         <div style="max-width:480px;margin:0 auto;font-family:system-ui,-apple-system,sans-serif;background:#f4f1ed;padding:24px">
@@ -82,7 +75,7 @@ export default function Printing() {
               Come visit us again anytime for more fun and memories. See you at the booth!
             </p>
 
-            ${imgTag ? `<div style="margin-bottom:16px;border:1px solid #eee;border-radius:6px;overflow:hidden">${imgTag}</div>` : ''}
+            ${photoUrl ? `<div style="margin-bottom:16px;border:1px solid #eee;border-radius:6px;overflow:hidden"><img src="${photoUrl}" style="width:100%;display:block" /></div>` : '<div style="margin-bottom:16px;padding:12px;background:#f9f9f9;border-radius:6px;text-align:center;font-size:12px;color:#999">Your photo strip was too large to embed. Open the booth to view.</div>'}
 
             <div style="border-top:1px dashed #ddd;padding-top:12px">
               <table style="width:100%;font-size:12px;color:#666">
@@ -102,12 +95,12 @@ export default function Printing() {
       await emailjs.send(EMAIL_CONFIG.serviceId, EMAIL_CONFIG.templateId, {
         to_email: c.email,
         from_name: 'ResiBOOTH',
-        message: 'Your photos are ready!',
+        message: 'Your ResiBOOTH photos are ready!',
         html_body: html,
         session_id: c.sid,
         package_name: c.pkgName,
       }, EMAIL_CONFIG.publicKey)
-    } catch (e) { console.error('Email error:', e) }
+    } catch (e) { console.error('Email send failed:', e); alert('Email send failed. Check console.') }
     setEmailSent(true)
   }
 
