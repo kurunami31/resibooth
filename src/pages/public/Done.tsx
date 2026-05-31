@@ -1,10 +1,27 @@
 import { useNavigate } from 'react-router-dom'
 import { useStore } from '../../store/resibooth'
 import { Check, Mail, Image } from '../../components/Icons'
+import { addTx } from '../../lib/database'
+import { useEffect, useRef } from 'react'
 
 export default function Done() {
   const nav = useNavigate()
   const c = useStore((s) => s.config)
+  const saved = useRef(false)
+
+  useEffect(() => {
+    if (saved.current || !c) return
+    saved.current = true
+    addTx({
+      pkg: c.pkgName,
+      amount: c.amount,
+      copies: c.copies,
+      method: c.method,
+      status: c.status,
+      sid: c.sid,
+      ref: '',
+    })
+  }, [c])
 
   return (
     <div className="anim-up" style={{ paddingTop: '3rem' }}>

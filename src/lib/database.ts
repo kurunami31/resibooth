@@ -77,6 +77,7 @@ export function addTx(data: any) {
   const db = load()
   data.id = id(db.transactions)
   data.date = stamp()
+  data.created = data.date
   db.transactions.push(data)
   save(db)
   return data
