@@ -71,9 +71,16 @@ export default function Printing() {
           <div style="text-align:center;font-size:13px;color:#d45a35;letter-spacing:4px;font-weight:700;margin-bottom:4px;text-transform:uppercase">RESIBOOTH</div>
           <div style="text-align:center;font-size:10px;color:#bbb;letter-spacing:2px;margin-bottom:20px;text-transform:uppercase">Photo Studio</div>
 
-          <div style="background:#fff;border-radius:8px;padding:20px;box-shadow:0 1px 3px rgba(0,0,0,.08)">
-            <div style="font-size:18px;font-weight:800;color:#1c1917;margin-bottom:4px">Your photos are ready!</div>
-            <div style="font-size:12px;color:#999;margin-bottom:16px">Thank you for visiting ResiBOOTH</div>
+          <div style="background:#fff;border-radius:8px;padding:24px;box-shadow:0 1px 3px rgba(0,0,0,.08)">
+            <p style="font-size:14px;color:#1c1917;line-height:1.7;margin:0 0 16px 0">
+              Hi there,
+            </p>
+            <p style="font-size:14px;color:#1c1917;line-height:1.7;margin:0 0 16px 0">
+              Thank you for stopping by <strong>ResiBOOTH</strong>! We had a great time capturing your moments. Your photos are attached below — feel free to download and share them with family and friends.
+            </p>
+            <p style="font-size:14px;color:#1c1917;line-height:1.7;margin:0 0 16px 0">
+              Come visit us again anytime for more fun and memories. See you at the booth!
+            </p>
 
             ${imgTag ? `<div style="margin-bottom:16px;border:1px solid #eee;border-radius:6px;overflow:hidden">${imgTag}</div>` : ''}
 
@@ -88,7 +95,7 @@ export default function Printing() {
 
           <div style="text-align:center;font-size:10px;color:#bbb;margin-top:16px;line-height:1.6">
             <div style="margin-bottom:4px">- - - - - - - - - - - - - - -</div>
-            <div>Visit us again at ResiBOOTH</div>
+            <div>ResiBOOTH &middot; Self-Service Photo Studio</div>
           </div>
         </div>`
 
