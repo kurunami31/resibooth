@@ -33,8 +33,11 @@ export default function Landing() {
         <h1 style={{ fontSize: 'clamp(2.5rem, 8vw, 4.5rem)', fontWeight: 900, lineHeight: 1.05, letterSpacing: '-.03em', color: '#1c1917', marginBottom: '1rem' }}>
           Your photos,<br />printed in seconds.
         </h1>
-        <p style={{ fontSize: '1.0625rem', color: 'rgba(28,25,23,.45)', lineHeight: 1.7, maxWidth: '32rem', margin: '0 auto 2rem', position: 'relative' }}>
+        <p style={{ fontSize: '1.0625rem', color: 'rgba(28,25,23,.45)', lineHeight: 1.7, maxWidth: '32rem', margin: '0 auto 1.5rem', position: 'relative' }}>
           Select a package, step inside, and capture your memories. No attendant needed — just you, the camera, and instant prints.
+        </p>
+        <p style={{ fontSize: '1.125rem', color: '#d45a35', fontWeight: 700, fontStyle: 'italic', marginBottom: '2rem', position: 'relative' }}>
+          Capture the moment, keep it forever.
         </p>
         <button className="btn" style={{ padding: '1rem 2.5rem', fontSize: '1.0625rem', position: 'relative' }} onClick={() => nav('/packages')}>
           <Play size={18} /> Start Your Session
