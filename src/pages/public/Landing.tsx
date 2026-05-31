@@ -12,11 +12,20 @@ export default function Landing() {
   const nav = useNavigate()
 
   return (
-    <div className="anim-in">
+    <div className="anim-in" style={{ position: 'relative', overflow: 'hidden' }}>
+      {/* Background decorations */}
+      <div style={{ position: 'fixed', inset: 0, background: 'radial-gradient(circle at 20% 30%, rgba(212,90,53,.05) 0%, transparent 50%), radial-gradient(circle at 80% 70%, rgba(212,90,53,.03) 0%, transparent 50%)', pointerEvents: 'none', zIndex: 0 }} />
+      <div className="anim-rotate-slow" style={{ position: 'fixed', top: '-10%', right: '-5%', width: '28rem', height: '28rem', borderRadius: '50%', border: '2px solid rgba(212,90,53,.08)', pointerEvents: 'none', zIndex: 0 }} />
+      <div className="anim-rotate-reverse" style={{ position: 'fixed', bottom: '-8%', left: '-3%', width: '22rem', height: '22rem', borderRadius: '50%', border: '2px dashed rgba(212,90,53,.06)', pointerEvents: 'none', zIndex: 0 }} />
+      <div className="anim-float" style={{ position: 'fixed', top: '20%', left: '5%', width: '1.5rem', height: '1.5rem', border: '2px solid rgba(212,90,53,.12)', borderRadius: '.375rem', transform: 'rotate(25deg)', pointerEvents: 'none', zIndex: 0 }} />
+      <div className="anim-float-delayed" style={{ position: 'fixed', bottom: '25%', right: '5%', width: '2rem', height: '2rem', border: '2px solid rgba(212,90,53,.1)', borderRadius: '.375rem', transform: 'rotate(-15deg)', pointerEvents: 'none', zIndex: 0 }} />
+      <div className="anim-float" style={{ position: 'fixed', top: '40%', right: '8%', width: 0, height: 0, borderLeft: '.875rem solid transparent', borderRight: '.875rem solid transparent', borderBottom: '1.25rem solid rgba(212,90,53,.09)', pointerEvents: 'none', zIndex: 0 }} />
+      <div className="anim-float-delayed" style={{ position: 'fixed', bottom: '40%', left: '4%', width: 0, height: 0, borderLeft: '.625rem solid transparent', borderRight: '.625rem solid transparent', borderTop: '1rem solid rgba(212,90,53,.06)', pointerEvents: 'none', zIndex: 0 }} />
+      <div style={{ position: 'fixed', top: '12%', left: '30%', width: '.375rem', height: '.375rem', borderRadius: '50%', background: 'rgba(212,90,53,.18)', pointerEvents: 'none', zIndex: 0 }} />
+      <div style={{ position: 'fixed', bottom: '18%', right: '25%', width: '.5rem', height: '.5rem', borderRadius: '50%', background: 'rgba(212,90,53,.14)', pointerEvents: 'none', zIndex: 0 }} />
+
       {/* Hero */}
-      <section style={{ padding: '4rem 1.25rem 3rem', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', top: '-30%', right: '-10%', width: '30rem', height: '30rem', borderRadius: '50%', border: '1px solid rgba(212,90,53,.05)', pointerEvents: 'none' }} />
-        <div style={{ position: 'absolute', bottom: '-20%', left: '-10%', width: '25rem', height: '25rem', borderRadius: '50%', border: '1px solid rgba(212,90,53,.04)', pointerEvents: 'none' }} />
+      <section style={{ padding: '4rem 1.25rem 3rem', textAlign: 'center', position: 'relative', zIndex: 1, overflow: 'hidden' }}>
         <div style={{ display: 'inline-flex', alignItems: 'center', gap: '.5rem', marginBottom: '1.5rem', padding: '.375rem .875rem', borderRadius: '1.25rem', background: 'rgba(212,90,53,.08)', border: '1px solid rgba(212,90,53,.15)' }}>
           <Camera size={14} />
           <span style={{ fontSize: '.75rem', color: '#d45a35', fontWeight: 600, letterSpacing: '.03em' }}>Self-Service Photo Booth</span>
@@ -33,7 +42,7 @@ export default function Landing() {
       </section>
 
       {/* How It Works */}
-      <section className="max-w" style={{ padding: '2rem 1.25rem 4rem' }}>
+      <section className="max-w" style={{ padding: '2rem 1.25rem 4rem', position: 'relative', zIndex: 1 }}>
         <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
           <span className="section-label" style={{ display: 'block', marginBottom: '.5rem' }}>How It Works</span>
           <h2 style={{ fontSize: '1.75rem', fontWeight: 800, lineHeight: 1.2 }}>Four simple steps</h2>
@@ -62,7 +71,7 @@ export default function Landing() {
       </section>
 
       {/* Footer */}
-      <footer style={{ padding: '1rem 1.25rem 2rem', textAlign: 'center', fontSize: '.6875rem', color: 'rgba(28,25,23,.2)', letterSpacing: '.03em' }}>
+      <footer style={{ padding: '1rem 1.25rem 2rem', textAlign: 'center', fontSize: '.6875rem', color: 'rgba(28,25,23,.2)', letterSpacing: '.03em', position: 'relative', zIndex: 1 }}>
         RESIBOOTH &middot; Self-Service Photo Booth
       </footer>
     </div>
