@@ -45,14 +45,44 @@ export default function Printing() {
     if (!c?.email) return
     try {
       const { default: emailjs } = await import('@emailjs/browser')
+
+      // Upload layout image to ImgBB and get a public URL
+      let photoUrl = ''
+      if (c.layoutImg) {
+        const formData = new FormData()
+        formData.append('image', c.layoutImg.split(',')[1])
+        const upload = await fetch('https://api.imgbb.com/1/upload?key=cf6a04b1df22c9ef114021da256e0255', {
+          method: 'POST',
+          body: formData,
+        })
+        const res = await upload.json()
+        if (res.success) photoUrl = res.data.url
+      }
+
+      const html = `
+        <div style="max-width:400px;margin:0 auto;font-family:monospace;background:#f4f1ed;padding:16px;border-radius:8px">
+          <div style="text-align:center;font-size:14px;color:#555;margin-bottom:12px;letter-spacing:2px">
+            - - - RESIBOOTH - - -
+          </div>
+          ${photoUrl ? `<div style="margin-bottom:8px;border:1px solid #ddd;border-radius:4px;overflow:hidden">
+            <img src="${photoUrl}" style="width:100%;display:block" />
+          </div>` : ''}
+          <div style="margin-top:12px;padding-top:8px;border-top:1px dashed #ccc;font-size:11px;color:#888;text-align:center">
+            Session: ${c.sid}<br/>
+            Package: ${c.pkgName}<br/>
+            ${c.copies} copy${c.copies > 1 ? 'ies' : ''}
+          </div>
+        </div>`
+
       await emailjs.send(EMAIL_CONFIG.serviceId, EMAIL_CONFIG.templateId, {
         to_email: c.email,
         from_name: 'ResiBOOTH',
         message: 'Your photos are ready!',
+        html_body: html,
         session_id: c.sid,
         package_name: c.pkgName,
       }, EMAIL_CONFIG.publicKey)
-    } catch {}
+    } catch (e) { console.error('Email error:', e) }
     setEmailSent(true)
   }
 
