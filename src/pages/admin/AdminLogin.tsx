@@ -1,15 +1,14 @@
-import { useState, useRef } from 'react'
+import { useRef, useState } from 'react'
 import { useNavigate, useOutletContext } from 'react-router-dom'
 
 export default function AdminLogin() {
   const nav = useNavigate()
-  const { setAuthed } = useOutletContext<{ authed: boolean; setAuthed: (v: boolean) => void }>()
+  const { setAuthed } = useOutletContext<{ setAuthed: (v: boolean) => void }>()
   const [err, setErr] = useState(false)
   const ref = useRef<HTMLInputElement>(null!)
 
   const login = () => {
     if (ref.current?.value === 'resibooth2026') {
-      sessionStorage.setItem('resibooth_admin', '1')
       setAuthed(true)
       nav('/admin/dashboard')
     } else {

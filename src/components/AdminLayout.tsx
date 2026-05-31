@@ -11,11 +11,17 @@ const navItems = [
 export default function AdminLayout() {
   const loc = useLocation()
   const nav = useNavigate()
-  const authed = !!sessionStorage.getItem('resibooth_admin')
+  const [authed, setAuthed] = useState(!!sessionStorage.getItem('resibooth_admin'))
   const isLogin = loc.pathname === '/admin'
+
+  const login = () => {
+    sessionStorage.setItem('resibooth_admin', '1')
+    setAuthed(true)
+  }
 
   const logout = () => {
     sessionStorage.removeItem('resibooth_admin')
+    setAuthed(false)
     nav('/admin')
   }
 
@@ -44,7 +50,7 @@ export default function AdminLayout() {
         </aside>
       )}
       <div style={{ flex: 1, overflow: 'auto', minHeight: '100vh' }}>
-        <Outlet />
+        <Outlet context={{ authed, setAuthed: login }} />
       </div>
     </div>
   )
