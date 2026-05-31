@@ -1,5 +1,5 @@
 export const EMAIL_CONFIG = {
-  serviceId: 'service_resibooth',
-  templateId: 'template_resibooth',
-  publicKey: 'resibooth_public_key',
+  serviceId: 'service_dncyvpv',
+  templateId: 'template_ejq3tcg',
+  publicKey: 'n4X2GrdluFxSMs6Oq',
 }
