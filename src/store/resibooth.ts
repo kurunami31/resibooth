@@ -30,6 +30,7 @@ export interface Config {
   email?: string
   photos?: string[]
   layoutImg?: string
+  photoUrl?: string
 }
 
 interface State {

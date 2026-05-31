@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { getTxs, clearTxs } from '../../lib/database'
 import { sanitize } from '../../lib/security'
+import { Image } from '../../components/Icons'
 
 export default function Transactions() {
   const [txs, setTxs] = useState(() => getTxs())
@@ -65,18 +66,38 @@ export default function Transactions() {
       </div>
 
       {filtered.map((t: any) => (
-        <div key={t.id} style={{ background: '#fff', borderRadius: '.5rem', padding: '.75rem 1rem', marginBottom: '.375rem', boxShadow: '0 .0625rem .125rem rgba(0,0,0,.02)' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '.25rem' }}>
-            <div style={{ fontSize: '.875rem', fontWeight: 700, color: '#1c1917' }}>{sanitize(t.pkg)}</div>
-            <div style={{ fontSize: '1.0625rem', fontWeight: 800, color: '#1c1917' }}>{t.amount}</div>
-          </div>
-          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '.6875rem', color: 'rgba(28,25,23,.35)' }}>
-            <span>{sanitize(t.sid)} &middot; {sanitize(t.method)} &middot; {t.copies} copy{t.copies > 1 ? 's' : ''}</span>
-            <span>{new Date(t.created).toLocaleString()}</span>
-          </div>
-          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '.6875rem', marginTop: '.25rem' }}>
-            <span style={{ color: t.status === 'paid' ? '#2a9d8f' : '#d45a35', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '.03em' }}>{t.status}</span>
-            {t.ref && <span style={{ color: 'rgba(28,25,23,.3)' }}>{sanitize(t.ref)}</span>}
+        <div key={t.id} style={{ background: '#fff', borderRadius: '.5rem', padding: '.75rem 1rem', marginBottom: '.375rem', boxShadow: '0 .0625rem .125rem rgba(0,0,0,.02)', display: 'flex', gap: '.75rem', alignItems: 'center' }}>
+          {t.photoUrl ? (
+            <div style={{ flexShrink: 0 }}>
+              <img src={t.photoUrl} alt="" style={{ width: '3rem', height: '3rem', borderRadius: '.375rem', objectFit: 'cover', display: 'block', cursor: 'pointer', border: '1px solid rgba(28,25,23,.06)' }}
+                onClick={() => window.open(t.photoUrl, '_blank')} />
+            </div>
+          ) : (
+            <div style={{ width: '3rem', height: '3rem', borderRadius: '.375rem', background: 'rgba(28,25,23,.04)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'rgba(28,25,23,.15)', flexShrink: 0 }}>
+              <Image size={16} />
+            </div>
+          )}
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '.25rem' }}>
+              <div style={{ fontSize: '.875rem', fontWeight: 700, color: '#1c1917' }}>{sanitize(t.pkg)}</div>
+              <div style={{ fontSize: '1.0625rem', fontWeight: 800, color: '#1c1917' }}>{t.amount}</div>
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '.6875rem', color: 'rgba(28,25,23,.35)' }}>
+              <span>{sanitize(t.sid)} &middot; {sanitize(t.method)} &middot; {t.copies} copy{t.copies > 1 ? 's' : ''}</span>
+              <span>{new Date(t.created).toLocaleString()}</span>
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '.6875rem', marginTop: '.25rem' }}>
+              <span style={{ color: t.status === 'paid' ? '#2a9d8f' : '#d45a35', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '.03em' }}>{t.status}</span>
+              <div style={{ display: 'flex', gap: '.375rem', alignItems: 'center' }}>
+                {t.ref && <span style={{ color: 'rgba(28,25,23,.3)' }}>{sanitize(t.ref)}</span>}
+                {t.photoUrl && (
+                  <button onClick={() => window.open(t.photoUrl, '_blank')}
+                    style={{ fontSize: '.6875rem', color: '#d45a35', cursor: 'pointer', background: 'none', border: 'none', fontFamily: 'inherit', padding: 0, fontWeight: 600 }}>
+                    Download
+                  </button>
+                )}
+              </div>
+            </div>
           </div>
         </div>
       ))}

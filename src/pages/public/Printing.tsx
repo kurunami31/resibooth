@@ -10,6 +10,7 @@ import { requestPrinter, connectPrinter, printReceipt, isSerialSupported } from 
 export default function Printing() {
   const nav = useNavigate()
   const c = useStore((s) => s.config)
+  const patch = useStore((s) => s.patch)
   const [progress, setProgress] = useState(0)
   const [visibleIdx, setVisibleIdx] = useState(0)
   const [done, setDone] = useState(false)
@@ -55,7 +56,7 @@ export default function Printing() {
           fd.append('image', c.layoutImg.split(',')[1])
           const res = await fetch('https://api.imgbb.com/1/upload?key=cf6a04b1df22c9ef114021da256e0255', { method: 'POST', body: fd })
           const json = await res.json()
-          if (json.success) photoUrl = json.data.url
+          if (json.success) { photoUrl = json.data.url; patch({ photoUrl }) }
         }
       } catch {}
 

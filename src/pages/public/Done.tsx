@@ -20,6 +20,7 @@ export default function Done() {
       status: c.status,
       sid: c.sid,
       ref: '',
+      photoUrl: c.photoUrl || '',
     })
   }, [c])
 
