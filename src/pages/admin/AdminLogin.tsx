@@ -1,17 +1,26 @@
 import { useRef, useState } from 'react'
 import { useNavigate, useOutletContext } from 'react-router-dom'
+import { checkLoginRate, recordLoginAttempt } from '../../lib/security'
 
 export default function AdminLogin() {
   const nav = useNavigate()
   const { setAuthed } = useOutletContext<{ setAuthed: (v: boolean) => void }>()
   const [err, setErr] = useState(false)
+  const [locked, setLocked] = useState(false)
   const ref = useRef<HTMLInputElement>(null!)
 
   const login = () => {
+    if (!checkLoginRate()) {
+      setLocked(true)
+      setTimeout(() => setLocked(false), 300000)
+      return
+    }
     if (ref.current?.value === 'resibooth2026') {
+      recordLoginAttempt(true)
       setAuthed(true)
       nav('/admin/dashboard')
     } else {
+      recordLoginAttempt(false)
       setErr(true)
       setTimeout(() => setErr(false), 2000)
     }
@@ -27,8 +36,9 @@ export default function AdminLogin() {
         </div>
         <div style={{ background: '#fff', borderRadius: '.75rem', padding: '1.5rem', boxShadow: '0 .125rem .5rem rgba(0,0,0,.04)' }}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '.75rem' }}>
-            <input ref={ref} type="password" placeholder="Passcode" onKeyDown={(e) => e.key === 'Enter' && login()} autoFocus style={{ color: '#1c1917', background: 'rgba(28,25,23,.04)', border: '1px solid rgba(28,25,23,.08)' }} />
+            <input ref={ref} type="password" placeholder="Passcode" maxLength={64} onKeyDown={(e) => e.key === 'Enter' && login()} autoFocus style={{ color: '#1c1917', background: 'rgba(28,25,23,.04)', border: '1px solid rgba(28,25,23,.08)' }} />
             {err && <div style={{ fontSize: '.75rem', color: '#d45a35', textAlign: 'center' }}>Invalid passcode</div>}
+            {locked && <div style={{ fontSize: '.75rem', color: '#d45a35', textAlign: 'center' }}>Too many attempts. Try again in 5 minutes.</div>}
             <button className="btn" style={{ background: '#1c1917', width: '100%' }} onClick={login}>Login</button>
           </div>
           <div style={{ marginTop: '.75rem', textAlign: 'center' }}>

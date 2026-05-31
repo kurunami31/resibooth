@@ -93,6 +93,11 @@ export function getTxs(opts?: { q?: string; from?: string }) {
   if (opts?.from) list = list.filter((t: any) => t.date >= (opts.from || ''))
   return list.sort((a: any, b: any) => b.date?.localeCompare(a.date))
 }
+export function clearTxs() {
+  const db = load()
+  db.transactions = []
+  save(db)
+}
 
 // ─── Sessions / Photos ─────────────────────────────────────
 

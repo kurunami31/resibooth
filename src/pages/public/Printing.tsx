@@ -4,6 +4,7 @@ import { useStore } from '../../store/resibooth'
 import { setTx } from '../../lib/database'
 import { Printer, Check, RefreshCw } from '../../components/Icons'
 import { EMAIL_CONFIG } from '../../lib/email'
+import { checkEmailRate } from '../../lib/security'
 import { requestPrinter, connectPrinter, printReceipt, isSerialSupported } from '../../lib/printer'
 
 export default function Printing() {
@@ -43,6 +44,7 @@ export default function Printing() {
 
   const sendEmail = async () => {
     if (!c?.email) return
+    if (!checkEmailRate()) { console.warn('Email rate limit exceeded'); setEmailSent(true); return }
     try {
       const { default: emailjs } = await import('@emailjs/browser')
 

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { getPackages } from '../../lib/database'
 import { useStore } from '../../store/resibooth'
 import { Package, ArrowLeft, ChevronRight } from '../../components/Icons'
+import { validEmail } from '../../lib/security'
 
 export default function Packages() {
   const nav = useNavigate()
@@ -10,11 +11,14 @@ export default function Packages() {
   const [pkgs] = useState(() => getPackages())
   const [sel, setSel] = useState<number | null>(null)
   const [email, setEmail] = useState('')
+  const [emailErr, setEmailErr] = useState(false)
 
   const cont = () => {
     const p: any = pkgs.find((x: any) => x.id === sel)
     if (!p) return
-    cfg({ pkgId: p.id, pkgName: p.name, pkgType: p.type, template: p.template, total: p.frames, copies: p.copies, copiesInc: p.copies, extra: p.extra, amount: p.price, method: 'pending', status: 'pending', txId: null, sid: `s${Date.now()}`, filter: 'none', email })
+    const e = email.trim().toLowerCase()
+    if (e && !validEmail(e)) { setEmailErr(true); setTimeout(() => setEmailErr(false), 2500); return }
+    cfg({ pkgId: p.id, pkgName: p.name, pkgType: p.type, template: p.template, total: p.frames, copies: p.copies, copiesInc: p.copies, extra: p.extra, amount: p.price, method: 'pending', status: 'pending', txId: null, sid: `s${Date.now()}`, filter: 'none', email: e })
     nav('/copies')
   }
 
@@ -62,8 +66,9 @@ export default function Packages() {
 
       <div className="max-w-sm" style={{ marginBottom: '1.5rem' }}>
         <label style={{ fontSize: '.75rem', color: 'rgba(28,25,23,.4)', fontWeight: 600, display: 'block', marginBottom: '.375rem' }}>Email (for digital copy)</label>
-        <input type="email" placeholder="you@email.com" value={email} onChange={(e) => setEmail(e.target.value)}
-          style={{ background: 'rgba(28,25,23,.04)', border: '1px solid rgba(28,25,23,.1)', color: '#1c1917' }} />
+        <input type="email" placeholder="you@email.com" maxLength={254} value={email} onChange={(e) => { setEmail(e.target.value); setEmailErr(false) }}
+          style={{ background: 'rgba(28,25,23,.04)', border: emailErr ? '1px solid #d45a35' : '1px solid rgba(28,25,23,.1)', color: '#1c1917' }} />
+        {emailErr && <div style={{ fontSize: '.6875rem', color: '#d45a35', marginTop: '.25rem' }}>Please enter a valid email address</div>}
       </div>
 
       <div className="max-w-sm" style={{ display: 'flex', gap: '.75rem', paddingBottom: '2rem' }}>

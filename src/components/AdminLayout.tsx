@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom'
+import { secureSessionStorage, setSecureSession, clearSecureSession } from '../lib/security'
 
 const navItems = [
   { to: '/admin/dashboard', label: 'Dashboard' },
@@ -11,16 +12,16 @@ const navItems = [
 export default function AdminLayout() {
   const loc = useLocation()
   const nav = useNavigate()
-  const [authed, setAuthed] = useState(!!sessionStorage.getItem('resibooth_admin'))
+  const [authed, setAuthed] = useState(() => secureSessionStorage())
   const isLogin = loc.pathname === '/admin'
 
   const login = () => {
-    sessionStorage.setItem('resibooth_admin', '1')
+    setSecureSession()
     setAuthed(true)
   }
 
   const logout = () => {
-    sessionStorage.removeItem('resibooth_admin')
+    clearSecureSession()
     setAuthed(false)
     nav('/admin')
   }

@@ -1,11 +1,21 @@
 import { useState } from 'react'
-import { getTxs } from '../../lib/database'
+import { getTxs, clearTxs } from '../../lib/database'
+import { sanitize } from '../../lib/security'
 
 export default function Transactions() {
-  const [txs] = useState(() => getTxs())
+  const [txs, setTxs] = useState(() => getTxs())
   const [q, setQ] = useState('')
   const [filt, setFilt] = useState<'all' | 'paid' | 'printed'>('all')
   const [sort, setSort] = useState<'newest' | 'oldest' | 'highest' | 'lowest'>('newest')
+
+  const refresh = () => setTxs([...getTxs()])
+
+  const clearAll = () => {
+    if (window.confirm('Clear all transactions? This cannot be undone.')) {
+      clearTxs()
+      refresh()
+    }
+  }
 
   const filtered = txs
     .filter((t: any) => {
@@ -37,7 +47,7 @@ export default function Transactions() {
       </div>
 
       <div style={{ display: 'flex', gap: '.5rem', marginBottom: '.75rem', flexWrap: 'wrap' }}>
-        <input placeholder="Search..." value={q} onChange={(e) => setQ(e.target.value)} style={{ flex: 1, minWidth: '12rem', color: '#1c1917', background: '#fff', border: '1px solid rgba(28,25,23,.08)' }} />
+        <input placeholder="Search..." value={q} onChange={(e) => setQ(e.target.value.replace(/[<>]/g, ''))} maxLength={100} style={{ flex: 1, minWidth: '12rem', color: '#1c1917', background: '#fff', border: '1px solid rgba(28,25,23,.08)' }} />
         <select value={sort} onChange={(e) => setSort(e.target.value as any)} style={{ width: 'auto', minWidth: '8rem', color: '#1c1917', background: '#fff', border: '1px solid rgba(28,25,23,.08)' }}>
           <option value="newest">Newest</option>
           <option value="oldest">Oldest</option>
@@ -45,6 +55,7 @@ export default function Transactions() {
           <option value="lowest">Lowest</option>
         </select>
         <button className="btn-ghost btn-sm" style={{ fontSize: '.75rem' }} onClick={csv}>Export</button>
+        <button className="btn-ghost btn-sm" style={{ fontSize: '.75rem', color: '#d45a35', borderColor: 'rgba(212,90,53,.2)' }} onClick={clearAll}>Clear All</button>
       </div>
 
       <div style={{ display: 'flex', gap: '.25rem', marginBottom: '1rem' }}>
@@ -56,16 +67,16 @@ export default function Transactions() {
       {filtered.map((t: any) => (
         <div key={t.id} style={{ background: '#fff', borderRadius: '.5rem', padding: '.75rem 1rem', marginBottom: '.375rem', boxShadow: '0 .0625rem .125rem rgba(0,0,0,.02)' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '.25rem' }}>
-            <div style={{ fontSize: '.875rem', fontWeight: 700, color: '#1c1917' }}>{t.pkg}</div>
+            <div style={{ fontSize: '.875rem', fontWeight: 700, color: '#1c1917' }}>{sanitize(t.pkg)}</div>
             <div style={{ fontSize: '1.0625rem', fontWeight: 800, color: '#1c1917' }}>{t.amount}</div>
           </div>
           <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '.6875rem', color: 'rgba(28,25,23,.35)' }}>
-            <span>{t.sid} &middot; {t.method} &middot; {t.copies} copy{t.copies > 1 ? 's' : ''}</span>
+            <span>{sanitize(t.sid)} &middot; {sanitize(t.method)} &middot; {t.copies} copy{t.copies > 1 ? 's' : ''}</span>
             <span>{new Date(t.created).toLocaleString()}</span>
           </div>
           <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '.6875rem', marginTop: '.25rem' }}>
             <span style={{ color: t.status === 'paid' ? '#2a9d8f' : '#d45a35', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '.03em' }}>{t.status}</span>
-            {t.ref && <span style={{ color: 'rgba(28,25,23,.3)' }}>{t.ref}</span>}
+            {t.ref && <span style={{ color: 'rgba(28,25,23,.3)' }}>{sanitize(t.ref)}</span>}
           </div>
         </div>
       ))}
