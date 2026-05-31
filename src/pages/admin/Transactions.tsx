@@ -1,0 +1,75 @@
+import { useState } from 'react'
+import { getTxs } from '../../lib/database'
+
+export default function Transactions() {
+  const [txs] = useState(() => getTxs())
+  const [q, setQ] = useState('')
+  const [filt, setFilt] = useState<'all' | 'paid' | 'printed'>('all')
+  const [sort, setSort] = useState<'newest' | 'oldest' | 'highest' | 'lowest'>('newest')
+
+  const filtered = txs
+    .filter((t: any) => {
+      if (filt !== 'all' && t.status !== filt) return false
+      if (q) { const l = q.toLowerCase(); return (t.pkg || '').toLowerCase().includes(l) || (t.sid || '').toLowerCase().includes(l) || (t.ref || '').toLowerCase().includes(l) }
+      return true
+    })
+    .sort((a: any, b: any) => {
+      if (sort === 'newest') return (b.created || '').localeCompare(a.created)
+      if (sort === 'oldest') return (a.created || '').localeCompare(b.created)
+      if (sort === 'highest') return b.amount - a.amount
+      return a.amount - b.amount
+    })
+
+  const total = filtered.reduce((s: number, t: any) => s + t.amount, 0)
+
+  const csv = () => {
+    const h = 'ID,Package,Amount,Copies,Method,Status,Reference,Date\n'
+    const r = filtered.map((t: any) => `${t.id},${t.pkg},${t.amount},${t.copies},${t.method},${t.status},${t.ref || ''},${t.created}`).join('\n')
+    const b = new Blob([h + r], { type: 'text/csv' })
+    const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = 'transactions.csv'; a.click()
+  }
+
+  return (
+    <div style={{ padding: '2rem' }}>
+      <div style={{ marginBottom: '1rem' }}>
+        <h2 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#1c1917' }}>Transactions</h2>
+        <p style={{ fontSize: '.8125rem', color: 'rgba(28,25,23,.4)', marginTop: '.125rem' }}>{filtered.length} records &middot; {total} total</p>
+      </div>
+
+      <div style={{ display: 'flex', gap: '.5rem', marginBottom: '.75rem', flexWrap: 'wrap' }}>
+        <input placeholder="Search..." value={q} onChange={(e) => setQ(e.target.value)} style={{ flex: 1, minWidth: '12rem', color: '#1c1917', background: '#fff', border: '1px solid rgba(28,25,23,.08)' }} />
+        <select value={sort} onChange={(e) => setSort(e.target.value as any)} style={{ width: 'auto', minWidth: '8rem', color: '#1c1917', background: '#fff', border: '1px solid rgba(28,25,23,.08)' }}>
+          <option value="newest">Newest</option>
+          <option value="oldest">Oldest</option>
+          <option value="highest">Highest</option>
+          <option value="lowest">Lowest</option>
+        </select>
+        <button className="btn-ghost btn-sm" style={{ fontSize: '.75rem' }} onClick={csv}>Export</button>
+      </div>
+
+      <div style={{ display: 'flex', gap: '.25rem', marginBottom: '1rem' }}>
+        {(['all', 'paid', 'printed'] as const).map((f) => (
+          <button key={f} onClick={() => setFilt(f)} style={{ padding: '.375rem .75rem', borderRadius: '.3125rem', fontSize: '.75rem', fontWeight: 600, cursor: 'pointer', border: '1px solid', borderColor: filt === f ? '#1c1917' : 'rgba(28,25,23,.08)', background: filt === f ? '#1c1917' : 'transparent', color: filt === f ? '#fff' : 'rgba(28,25,23,.5)', fontFamily: 'inherit', textTransform: 'capitalize' }}>{f}</button>
+        ))}
+      </div>
+
+      {filtered.map((t: any) => (
+        <div key={t.id} style={{ background: '#fff', borderRadius: '.5rem', padding: '.75rem 1rem', marginBottom: '.375rem', boxShadow: '0 .0625rem .125rem rgba(0,0,0,.02)' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '.25rem' }}>
+            <div style={{ fontSize: '.875rem', fontWeight: 700, color: '#1c1917' }}>{t.pkg}</div>
+            <div style={{ fontSize: '1.0625rem', fontWeight: 800, color: '#1c1917' }}>{t.amount}</div>
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '.6875rem', color: 'rgba(28,25,23,.35)' }}>
+            <span>{t.sid} &middot; {t.method} &middot; {t.copies} copy{t.copies > 1 ? 's' : ''}</span>
+            <span>{new Date(t.created).toLocaleString()}</span>
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '.6875rem', marginTop: '.25rem' }}>
+            <span style={{ color: t.status === 'paid' ? '#2a9d8f' : '#d45a35', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '.03em' }}>{t.status}</span>
+            {t.ref && <span style={{ color: 'rgba(28,25,23,.3)' }}>{t.ref}</span>}
+          </div>
+        </div>
+      ))}
+      {filtered.length === 0 && <div style={{ fontSize: '.8125rem', color: 'rgba(28,25,23,.2)', textAlign: 'center', padding: '3rem' }}>No transactions found</div>}
+    </div>
+  )
+}
