@@ -70,7 +70,7 @@ export default function Printing() {
           <div style="margin-top:12px;padding-top:8px;border-top:1px dashed #ccc;font-size:11px;color:#888;text-align:center">
             Session: ${c.sid}<br/>
             Package: ${c.pkgName}<br/>
-            ${c.copies} copy${c.copies > 1 ? 'ies' : ''}
+            ${c.copies} cop${c.copies > 1 ? 'ies' : 'y'}
           </div>
         </div>`
 
@@ -147,7 +147,7 @@ export default function Printing() {
               <Printer size={20} />
             </div>
             <h2 style={{ fontSize: '1.5rem', fontWeight: 800, marginBottom: '.25rem' }}>Printing</h2>
-            <p style={{ fontSize: '.8125rem', color: 'rgba(28,25,23,.4)', marginBottom: '1rem' }}>Thermal printer — {c.copies} copy{c.copies > 1 ? 'ies' : ''}</p>
+            <p style={{ fontSize: '.8125rem', color: 'rgba(28,25,23,.4)', marginBottom: '1rem' }}>Thermal printer — {c.copies} cop{c.copies > 1 ? 'ies' : 'y'}</p>
             <div style={{ width: '80%', maxWidth: '16rem', margin: '0 auto 1rem', height: '.375rem', borderRadius: '.1875rem', background: 'rgba(28,25,23,.06)', overflow: 'hidden' }}>
               <div style={{ height: '100%', borderRadius: '.1875rem', background: '#d45a35', width: `${progress}%`, transition: 'width .4s ease' }} />
             </div>
