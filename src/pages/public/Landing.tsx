@@ -1,6 +1,5 @@
 import { useNavigate } from 'react-router-dom'
-import { getPackages } from '../../lib/database'
-import { Camera, Image, Print, Package, ChevronRight, Mail, Play } from '../../components/Icons'
+import { Camera, Package, Print, Mail, Play } from '../../components/Icons'
 
 const steps = [
   { icon: Package, label: 'Choose Package', desc: 'Select from our curated photo packages' },
@@ -11,7 +10,6 @@ const steps = [
 
 export default function Landing() {
   const nav = useNavigate()
-  const pkgs = getPackages().slice(0, 3)
 
   return (
     <div className="anim-in">
@@ -60,59 +58,6 @@ export default function Landing() {
               <div style={{ fontSize: '.8125rem', color: 'rgba(28,25,23,.4)', lineHeight: 1.4 }}>{s.desc}</div>
             </div>
           ))}
-        </div>
-      </section>
-
-      {/* Pricing */}
-      <section className="max-w" style={{ padding: '1rem 1.25rem 4rem' }}>
-        <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-          <span className="section-label" style={{ display: 'block', marginBottom: '.5rem' }}>Pricing</span>
-          <h2 style={{ fontSize: '1.75rem', fontWeight: 800, lineHeight: 1.2 }}>Choose your package</h2>
-        </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(14rem, 1fr))', gap: '1.25rem', maxWidth: '52rem', margin: '0 auto' }}>
-          {pkgs.map((p: any, i: number) => (
-            <div key={p.id} className="card" style={{
-              textAlign: 'center', padding: '2rem 1.25rem',
-              borderColor: i === 1 ? 'rgba(212,90,53,.25)' : 'rgba(28,25,23,.06)',
-              position: 'relative',
-            }}>
-              {i === 1 && (
-                <div style={{
-                  position: 'absolute', top: '-.5rem', left: '50%', transform: 'translateX(-50%)',
-                  padding: '.125rem .75rem', borderRadius: '.75rem', background: '#d45a35', color: '#fff',
-                  fontSize: '.625rem', fontWeight: 700, letterSpacing: '.04em', whiteSpace: 'nowrap',
-                }}>
-                  MOST POPULAR
-                </div>
-              )}
-              <div style={{ fontSize: '.75rem', color: 'rgba(28,25,23,.4)', marginBottom: '.375rem', fontWeight: 600, letterSpacing: '.03em', textTransform: 'uppercase' }}>{p.name}</div>
-              <div style={{ fontSize: '2.75rem', fontWeight: 900, color: '#1c1917', marginBottom: '.125rem', letterSpacing: '-.02em' }}>{p.price}</div>
-              <div style={{ display: 'flex', justifyContent: 'center', gap: '.5rem', fontSize: '.75rem', color: 'rgba(28,25,23,.35)', marginBottom: '1rem' }}>
-                <span>{p.copies} print{p.copies > 1 ? 's' : ''}</span>
-                <span>&middot;</span>
-                <span>{p.frames} photos</span>
-              </div>
-              <div style={{ borderTop: '1px solid rgba(28,25,23,.06)', paddingTop: '.75rem', marginBottom: '.75rem' }}>
-                {(p.features || []).slice(0, 3).map((f: string, j: number) => (
-                    <div key={j} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '.375rem', fontSize: '.75rem', color: 'rgba(28,25,23,.5)', marginBottom: '.375rem' }}>
-                      <span style={{ color: '#d45a35', display: 'flex', flexShrink: 0 }}><ChevronRight size={12} /></span> {f}
-                    </div>
-                ))}
-              </div>
-              <button className="btn btn-sm" style={{ width: '100%' }} onClick={() => nav('/packages')}>Select</button>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* CTA */}
-      <section style={{ padding: '1rem 1.25rem 4rem', textAlign: 'center' }}>
-        <div style={{ maxWidth: '28rem', margin: '0 auto', padding: '2.5rem 1.5rem', borderRadius: '1rem', background: 'rgba(28,25,23,.02)', border: '1px solid rgba(28,25,23,.04)' }}>
-          <p style={{ fontSize: '.9375rem', color: 'rgba(28,25,23,.4)', marginBottom: '.5rem' }}>Ready to capture your memories?</p>
-          <p style={{ fontSize: '.8125rem', color: 'rgba(28,25,23,.25)', marginBottom: '1.25rem' }}>No account needed. Pay on site.</p>
-          <button className="btn" style={{ padding: '.875rem 2.5rem', fontSize: '1rem' }} onClick={() => nav('/packages')}>
-            <Play size={16} /> Get Started
-          </button>
         </div>
       </section>
 
