@@ -46,27 +46,30 @@ export default function Printing() {
     try {
       const { default: emailjs } = await import('@emailjs/browser')
 
-      // Upload layout image to ImgBB and get a public URL
+      // Try to upload to ImgBB, fall back to embedding data URL
       let photoUrl = ''
-      if (c.layoutImg) {
-        const formData = new FormData()
-        formData.append('image', c.layoutImg.split(',')[1])
-        const upload = await fetch('https://api.imgbb.com/1/upload?key=cf6a04b1df22c9ef114021da256e0255', {
-          method: 'POST',
-          body: formData,
-        })
-        const res = await upload.json()
-        if (res.success) photoUrl = res.data.url
-      }
+      try {
+        if (c.layoutImg) {
+          const fd = new FormData()
+          fd.append('image', c.layoutImg.split(',')[1])
+          const res = await fetch('https://api.imgbb.com/1/upload?key=cf6a04b1df22c9ef114021da256e0255', { method: 'POST', body: fd })
+          const json = await res.json()
+          if (json.success) photoUrl = json.data.url
+        }
+      } catch {}
+
+      const imgTag = photoUrl
+        ? `<img src="${photoUrl}" style="width:100%;display:block" />`
+        : c.layoutImg
+          ? `<img src="${c.layoutImg}" style="width:100%;display:block" />`
+          : ''
 
       const html = `
         <div style="max-width:400px;margin:0 auto;font-family:monospace;background:#f4f1ed;padding:16px;border-radius:8px">
           <div style="text-align:center;font-size:14px;color:#555;margin-bottom:12px;letter-spacing:2px">
             - - - RESIBOOTH - - -
           </div>
-          ${photoUrl ? `<div style="margin-bottom:8px;border:1px solid #ddd;border-radius:4px;overflow:hidden">
-            <img src="${photoUrl}" style="width:100%;display:block" />
-          </div>` : ''}
+          ${imgTag ? `<div style="margin-bottom:8px;border:1px solid #ddd;border-radius:4px;overflow:hidden">${imgTag}</div>` : ''}
           <div style="margin-top:12px;padding-top:8px;border-top:1px dashed #ccc;font-size:11px;color:#888;text-align:center">
             Session: ${c.sid}<br/>
             Package: ${c.pkgName}<br/>
