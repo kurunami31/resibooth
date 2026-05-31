@@ -39,8 +39,19 @@ hr { border: none; border-top: 1px solid rgba(28,25,23,.06); margin: 1rem 0; }
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 @keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.03); } }
 @keyframes countPulse { 0%,100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.1); opacity: .8; } }
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes rotateSlow { to { transform: rotate(360deg); } }
+@keyframes rotateReverse { to { transform: rotate(-360deg); } }
+@keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+@keyframes floatDelayed { 0%,100% { transform: translateY(0); } 50% { transform: translateY(6px); } }
+@keyframes pulseWidth { 0%,100% { width: 3rem; opacity: .15; } 50% { width: 5rem; opacity: .25; } }
 .anim-up { animation: fadeUp .4s ease-out both; }
 .anim-in { animation: fadeIn .3s ease-out both; }
+.anim-rotate-slow { animation: rotateSlow 20s linear infinite; }
+.anim-rotate-reverse { animation: rotateReverse 25s linear infinite; }
+.anim-float { animation: float 4s ease-in-out infinite; }
+.anim-float-delayed { animation: floatDelayed 5s ease-in-out infinite; }
+.anim-pulse-width { animation: pulseWidth 3s ease-in-out infinite; }
 .stagger > * { animation: fadeUp .4s ease-out both; }
 .stagger > *:nth-child(1) { animation-delay: .05s; }
 .stagger > *:nth-child(2) { animation-delay: .1s; }
