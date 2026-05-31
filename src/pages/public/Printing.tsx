@@ -4,6 +4,7 @@ import { useStore } from '../../store/resibooth'
 import { setTx } from '../../lib/database'
 import { Printer, Check, RefreshCw } from '../../components/Icons'
 import { EMAIL_CONFIG } from '../../lib/email'
+import { requestPrinter, connectPrinter, printReceipt, isSerialSupported } from '../../lib/printer'
 
 export default function Printing() {
   const nav = useNavigate()
@@ -12,6 +13,8 @@ export default function Printing() {
   const [visibleIdx, setVisibleIdx] = useState(0)
   const [done, setDone] = useState(false)
   const [emailSent, setEmailSent] = useState(false)
+  const [thermalStatus, setThermalStatus] = useState<'idle' | 'connecting' | 'printing' | 'done' | 'error'>('idle')
+  const [thermalErr, setThermalErr] = useState('')
 
   const photos = c?.photos || []
   const copies = Math.min(c?.copies || 1, 5)
@@ -53,7 +56,43 @@ export default function Printing() {
     setEmailSent(true)
   }
 
+  const printThermal = async () => {
+    setThermalStatus('connecting')
+    setThermalErr('')
+    try {
+      const port = await requestPrinter()
+      if (!port) { setThermalStatus('idle'); return }
+      await connectPrinter(port)
+      setThermalStatus('printing')
+      await printReceipt(port, photos, copies)
+      await port.close()
+      setThermalStatus('done')
+    } catch (e: any) {
+      setThermalStatus('error')
+      setThermalErr(e.message || 'Print failed')
+    }
+  }
+
   if (!c) return null
+
+  const thermalBtn = (
+    <div style={{ marginTop: '1rem', display: 'flex', flexDirection: 'column', gap: '.5rem', alignItems: 'center' }}>
+      {thermalStatus === 'idle' && (
+        <button className="btn-ghost" onClick={printThermal}>
+          <Printer size={14} /> Print via Thermal Printer
+        </button>
+      )}
+      {thermalStatus === 'connecting' && <div style={{ fontSize: '.8125rem', color: 'rgba(28,25,23,.4)' }}>Select printer in the dialog...</div>}
+      {thermalStatus === 'printing' && <div style={{ fontSize: '.8125rem', color: 'rgba(28,25,23,.4)' }}>Printing to thermal printer...</div>}
+      {thermalStatus === 'done' && <div style={{ fontSize: '.8125rem', color: '#2a9d8f' }}>Thermal print complete</div>}
+      {thermalStatus === 'error' && (
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ fontSize: '.75rem', color: '#d45a35', marginBottom: '.5rem' }}>{thermalErr}</div>
+          <button className="btn-ghost btn-sm" onClick={printThermal}>Retry</button>
+        </div>
+      )}
+    </div>
+  )
 
   return (
     <div className="anim-up" style={{ paddingTop: '1.5rem' }}>
@@ -69,7 +108,8 @@ export default function Printing() {
             <div style={{ marginBottom: '1.5rem' }}>
               <ReceiptStrip photos={photos} copies={copies} emailSent={emailSent} email={c.email} done />
             </div>
-            <button className="btn" onClick={() => nav('/done')}>Done</button>
+            {isSerialSupported() && thermalBtn}
+            <button className="btn" style={{ marginTop: '1rem' }} onClick={() => nav('/done')}>Done</button>
           </>
         ) : (
           <>
